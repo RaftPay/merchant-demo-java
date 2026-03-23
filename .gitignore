@@ -1,0 +1,11 @@
+config.properties
+*.class
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+*.log
+target/
+out/
