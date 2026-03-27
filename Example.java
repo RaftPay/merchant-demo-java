@@ -72,7 +72,10 @@ public class Example {
             params.put("notifyUrl", notifyUrl);
             params.put("returnUrl", returnUrl);
             params.put("description", "Test deposit");
-            // params.put("payerMobile", "03001234567");  // 选填
+            params.put("payerMobile", "03001234567");
+            params.put("payerEmail", "test@example.com");
+            params.put("payerName", "Test User");
+            params.put("customerIp", "1.2.3.4");
 
             Map<String, Object> result = client.createDeposit(params);
             if (Integer.valueOf(0).equals(toInt(result.get("result")))) {
@@ -94,9 +97,47 @@ public class Example {
         System.out.println();
 
         // ============================================================
-        // 3. 创建代付订单（手机钱包 MWALLET）
+        // 2b. 创建代收订单（直连模式）
         // ============================================================
-        System.out.println("========== 3. 创建代付订单 (MWALLET) ==========");
+        System.out.println("========== 2b. 创建代收订单（直连模式） ==========");
+        String depositDirectOrderNo = "DEP" + System.currentTimeMillis() + UUID.randomUUID().toString().substring(0, 8) + "D";
+        try {
+            Map<String, Object> params = new LinkedHashMap<>();
+            params.put("merchantOrderNo", depositDirectOrderNo);
+            params.put("amount", "100");
+            params.put("currency", "PKR");
+            params.put("payType", "JAZZCASH");
+            params.put("notifyUrl", notifyUrl);
+            params.put("returnUrl", returnUrl);
+            params.put("description", "Test deposit - direct mode");
+            params.put("payerMobile", "03001234567");
+            params.put("payerEmail", "test@example.com");
+            params.put("payerName", "Test User");
+            params.put("customerIp", "1.2.3.4");
+            params.put("directMode", 1);
+
+            Map<String, Object> result = client.createDeposit(params);
+            if (Integer.valueOf(0).equals(toInt(result.get("result")))) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> data = (Map<String, Object>) result.get("data");
+                System.out.println("订单创建成功! (直连模式，无收银台链接)");
+                System.out.println("平台订单号: " + data.get("orderId"));
+                System.out.println("商户订单号: " + data.get("merchantOrderNo"));
+                int status = toInt(data.get("status"));
+                String statusText = statusMap.getOrDefault(status, "未知");
+                System.out.println("订单状态:   " + status + " (" + statusText + ")");
+            } else {
+                System.out.println("创建失败: " + result.get("message") + " (code: " + result.get("result") + ")");
+            }
+        } catch (Exception e) {
+            System.out.println("异常: " + e.getMessage());
+        }
+        System.out.println();
+
+        // ============================================================
+        // 4. 创建代付订单（手机钱包 MWALLET）
+        // ============================================================
+        System.out.println("========== 4. 创建代付订单 (MWALLET) ==========");
         String payoutOrderNo = "WDR" + System.currentTimeMillis() + UUID.randomUUID().toString().substring(0, 8);
         try {
             Map<String, Object> params = new LinkedHashMap<>();
@@ -110,6 +151,7 @@ public class Example {
             params.put("accountName", "Test User");
             params.put("notifyUrl", notifyUrl);
             params.put("description", "Test payout - wallet");
+            params.put("customerIp", "1.2.3.4");
 
             Map<String, Object> result = client.createPayout(params);
             if (Integer.valueOf(0).equals(toInt(result.get("result")))) {
@@ -129,9 +171,9 @@ public class Example {
         System.out.println();
 
         // ============================================================
-        // 4. 创建代付订单（银行转账 IBFT）
+        // 5. 创建代付订单（银行转账 IBFT）
         // ============================================================
-        System.out.println("========== 4. 创建代付订单 (IBFT) ==========");
+        System.out.println("========== 5. 创建代付订单 (IBFT) ==========");
         String ibftOrderNo = "WDR" + System.currentTimeMillis() + UUID.randomUUID().toString().substring(0, 8) + "B";
         try {
             Map<String, Object> params = new LinkedHashMap<>();
@@ -145,6 +187,7 @@ public class Example {
             params.put("bankCode", "HBL");
             params.put("notifyUrl", notifyUrl);
             params.put("description", "Test payout - bank transfer");
+            params.put("customerIp", "1.2.3.4");
 
             Map<String, Object> result = client.createPayout(params);
             if (Integer.valueOf(0).equals(toInt(result.get("result")))) {
@@ -164,9 +207,9 @@ public class Example {
         System.out.println();
 
         // ============================================================
-        // 5. 查询订单状态
+        // 6. 查询订单状态
         // ============================================================
-        System.out.println("========== 5. 查询订单状态 ==========");
+        System.out.println("========== 6. 查询订单状态 ==========");
         try {
             Map<String, Object> result = client.queryOrderStatus(depositOrderNo);
             if (Integer.valueOf(0).equals(toInt(result.get("result")))) {

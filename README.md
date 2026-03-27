@@ -31,10 +31,11 @@ java Example
 | # | 接口 | 方法 |
 |---|------|------|
 | 1 | 代收订单创建 | `client.createDeposit(params)` |
-| 2 | 代付订单创建 | `client.createPayout(params)` |
-| 3 | 订单状态查询 | `client.queryOrderStatus(merchantOrderNo)` |
-| 4 | 余额查询 | `client.queryBalance()` |
-| 5 | 回调通知处理 | 运行 `java Callback` |
+| 2 | 代收订单创建（直连） | `client.createDeposit(params)` + `directMode=1` |
+| 3 | 代付订单创建 | `client.createPayout(params)` |
+| 4 | 订单状态查询 | `client.queryOrderStatus(merchantOrderNo)` |
+| 5 | 余额查询 | `client.queryBalance()` |
+| 6 | 回调通知处理 | 运行 `java Callback` |
 
 ## 集成到你的项目
 
