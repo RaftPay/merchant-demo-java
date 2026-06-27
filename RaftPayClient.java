@@ -49,11 +49,12 @@ public class RaftPayClient {
      *   - merchantOrderNo string 必填 商户订单号（最大60字符）
      *   - amount          string 必填 金额，如 "100" 或 "100.00"
      *   - notifyUrl       string 必填 回调地址（最大150字符）
-     *   - currency        string 选填 固定 PKR
-     *   - payType         string 选填 EASYPAISA 或 JAZZCASH
+     *   - currency        string 必填 固定 PKR
+     *   - payType         string 必填 EASYPAISA 或 JAZZCASH
      *   - description     string 选填 订单描述
-     *   - payerMobile     string 选填 格式 03xxxxxxxxx
+     *   - payerMobile     string 必填 格式 03xxxxxxxxx
      *   - returnUrl       string 选填 支付完成后跳转地址
+     *   - directMode      number 选填 0=收银台模式，1=直连模式（推荐）
      * @return API 响应
      */
     public Map<String, Object> createDeposit(Map<String, Object> params) throws Exception {

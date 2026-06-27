@@ -59,51 +59,13 @@ public class Example {
         System.out.println();
 
         // ============================================================
-        // 2. 创建代收订单
+        // 2. 创建代收订单（推荐直连模式）
         // ============================================================
-        System.out.println("========== 2. 创建代收订单 ==========");
+        System.out.println("========== 2. 创建代收订单（推荐直连模式） ==========");
         String depositOrderNo = "DEP" + System.currentTimeMillis() + UUID.randomUUID().toString().substring(0, 8);
         try {
             Map<String, Object> params = new LinkedHashMap<>();
             params.put("merchantOrderNo", depositOrderNo);
-            params.put("amount", "100");
-            params.put("currency", "PKR");
-            params.put("payType", "JAZZCASH");
-            params.put("notifyUrl", notifyUrl);
-            params.put("returnUrl", returnUrl);
-            params.put("description", "Test deposit");
-            params.put("payerMobile", "03001234567");
-            params.put("payerEmail", "test@example.com");
-            params.put("payerName", "Test User");
-            params.put("customerIp", "1.2.3.4");
-
-            Map<String, Object> result = client.createDeposit(params);
-            if (Integer.valueOf(0).equals(toInt(result.get("result")))) {
-                @SuppressWarnings("unchecked")
-                Map<String, Object> data = (Map<String, Object>) result.get("data");
-                System.out.println("订单创建成功!");
-                System.out.println("平台订单号: " + data.get("orderId"));
-                System.out.println("商户订单号: " + data.get("merchantOrderNo"));
-                System.out.println("收银台链接: " + data.get("payUrl"));
-                int status = toInt(data.get("status"));
-                String statusText = statusMap.getOrDefault(status, "未知");
-                System.out.println("订单状态:   " + status + " (" + statusText + ")");
-            } else {
-                System.out.println("创建失败: " + result.get("message") + " (code: " + result.get("result") + ")");
-            }
-        } catch (Exception e) {
-            System.out.println("异常: " + e.getMessage());
-        }
-        System.out.println();
-
-        // ============================================================
-        // 2b. 创建代收订单（直连模式）
-        // ============================================================
-        System.out.println("========== 2b. 创建代收订单（直连模式） ==========");
-        String depositDirectOrderNo = "DEP" + System.currentTimeMillis() + UUID.randomUUID().toString().substring(0, 8) + "D";
-        try {
-            Map<String, Object> params = new LinkedHashMap<>();
-            params.put("merchantOrderNo", depositDirectOrderNo);
             params.put("amount", "100");
             params.put("currency", "PKR");
             params.put("payType", "JAZZCASH");
@@ -120,9 +82,48 @@ public class Example {
             if (Integer.valueOf(0).equals(toInt(result.get("result")))) {
                 @SuppressWarnings("unchecked")
                 Map<String, Object> data = (Map<String, Object>) result.get("data");
-                System.out.println("订单创建成功! (直连模式，无收银台链接)");
+                System.out.println("订单创建成功! (推荐直连模式，无收银台链接)");
                 System.out.println("平台订单号: " + data.get("orderId"));
                 System.out.println("商户订单号: " + data.get("merchantOrderNo"));
+                int status = toInt(data.get("status"));
+                String statusText = statusMap.getOrDefault(status, "未知");
+                System.out.println("订单状态:   " + status + " (" + statusText + ")");
+            } else {
+                System.out.println("创建失败: " + result.get("message") + " (code: " + result.get("result") + ")");
+            }
+        } catch (Exception e) {
+            System.out.println("异常: " + e.getMessage());
+        }
+        System.out.println();
+
+        // ============================================================
+        // 2b. 创建代收订单（收银台模式，可选）
+        // ============================================================
+        System.out.println("========== 2b. 创建代收订单（收银台模式，可选） ==========");
+        String cashierOrderNo = "DEP" + System.currentTimeMillis() + UUID.randomUUID().toString().substring(0, 8) + "C";
+        try {
+            Map<String, Object> params = new LinkedHashMap<>();
+            params.put("merchantOrderNo", cashierOrderNo);
+            params.put("amount", "100");
+            params.put("currency", "PKR");
+            params.put("payType", "JAZZCASH");
+            params.put("notifyUrl", notifyUrl);
+            params.put("returnUrl", returnUrl);
+            params.put("description", "Test deposit - cashier mode");
+            params.put("payerMobile", "03001234567");
+            params.put("payerEmail", "test@example.com");
+            params.put("payerName", "Test User");
+            params.put("customerIp", "1.2.3.4");
+            params.put("directMode", 0);
+
+            Map<String, Object> result = client.createDeposit(params);
+            if (Integer.valueOf(0).equals(toInt(result.get("result")))) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> data = (Map<String, Object>) result.get("data");
+                System.out.println("订单创建成功! (收银台模式)");
+                System.out.println("平台订单号: " + data.get("orderId"));
+                System.out.println("商户订单号: " + data.get("merchantOrderNo"));
+                System.out.println("收银台链接: " + data.get("payUrl"));
                 int status = toInt(data.get("status"));
                 String statusText = statusMap.getOrDefault(status, "未知");
                 System.out.println("订单状态:   " + status + " (" + statusText + ")");
@@ -147,8 +148,6 @@ public class Example {
             params.put("payoutMethod", "MWALLET");
             params.put("payType", "JAZZCASH");
             params.put("payerMobile", "03001234567");
-            params.put("accountNumber", "03001234567");
-            params.put("accountName", "Test User");
             params.put("notifyUrl", notifyUrl);
             params.put("description", "Test payout - wallet");
             params.put("customerIp", "1.2.3.4");

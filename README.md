@@ -30,8 +30,8 @@ java Example
 
 | # | 接口 | 方法 |
 |---|------|------|
-| 1 | 代收订单创建 | `client.createDeposit(params)` |
-| 2 | 代收订单创建（直连） | `client.createDeposit(params)` + `directMode=1` |
+| 1 | 代收订单创建（推荐直连） | `client.createDeposit(params)` + `directMode=1` |
+| 2 | 代收订单创建（收银台模式，可选） | `client.createDeposit(params)` + `directMode=0` |
 | 3 | 代付订单创建 | `client.createPayout(params)` |
 | 4 | 订单状态查询 | `client.queryOrderStatus(merchantOrderNo)` |
 | 5 | 余额查询 | `client.queryBalance()` |
@@ -49,7 +49,10 @@ Map<String, Object> params = new LinkedHashMap<>();
 params.put("merchantOrderNo", "YOUR_ORDER_NO");
 params.put("amount", "100");
 params.put("currency", "PKR");
+params.put("payType", "JAZZCASH");
+params.put("payerMobile", "03001234567");
 params.put("notifyUrl", "https://your-domain.com/callback");
+params.put("directMode", 1);
 Map<String, Object> result = client.createDeposit(params);
 
 // 查询余额
